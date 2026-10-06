@@ -32,6 +32,7 @@ const ROOF_SLOPES = [
 ] as const;
 
 const ELEVATIONS = ["Front Elevation", "Right Elevation", "Rear Elevation", "Left Elevation"];
+const INTERIOR_ROOMS = ["Kitchen", "Dining Room", "Basement"];
 
 router.get(
   "/api/claims",
@@ -106,6 +107,9 @@ router.post(
           slopeCode: string;
         });
       }
+    }
+    for (const name of INTERIOR_ROOMS) {
+      rooms.push({ _id: randomUUID(), claimId, name, section: "interior", triggers: [] });
     }
     await Room.insertMany(rooms);
     if (meta.water) {
