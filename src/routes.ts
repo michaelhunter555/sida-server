@@ -278,16 +278,29 @@ router.post(
   asyncRoute(async (req, res) => {
     const reason = String(req.body.reason || "").trim();
     const key = String(req.body.key || "").trim();
+    const label = String(req.body.label || "").trim();
     if (!key || !reason) throw new HttpError(400, "A limitation needs the item and a reason.");
     const doc = {
       _id: randomUUID(),
       claimId: String(req.params.id),
       key,
+      ...(label ? { label } : {}),
       reason,
       createdAt: new Date().toISOString(),
     };
     await Limitation.create(doc);
     res.json(publicId(doc));
+  }),
+);
+
+router.patch(
+  "/api/limitations/:id",
+  asyncRoute(async (req, res) => {
+    const reason = String(req.body.reason || "").trim();
+    if (!reason) throw new HttpError(400, "A limitation needs a reason.");
+    const result = await Limitation.findByIdAndUpdate(req.params.id, { $set: { reason } }, { new: true }).lean<{ _id: string }>();
+    if (!result) throw new HttpError(404, "Limitation not found");
+    res.json(publicId(result));
   }),
 );
 

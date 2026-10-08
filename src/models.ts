@@ -160,6 +160,7 @@ const limitationSchema = new Schema(
     _id: { type: String, required: true },
     claimId: { type: String, index: true },
     key: String,
+    label: String,
     reason: String,
     createdAt: String,
   },

@@ -115,6 +115,7 @@ export interface Limitation {
   id: string;
   claimId: string;
   key: string;
+  label?: string;
   reason: string;
   createdAt: string;
 }
